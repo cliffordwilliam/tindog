@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import c from "./c.js";
-// components
 import PrivateHeader from "./components/PrivateHeader.jsx";
 import PublicHeader from "./components/PublicHeader.jsx";
 import Footer from "./components/Footer.jsx";

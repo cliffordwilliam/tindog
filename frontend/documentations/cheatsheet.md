@@ -417,3 +417,4 @@ Remove:
 ```
 
 # update site icon with ico file in the public folder, delete the vite svg
+
