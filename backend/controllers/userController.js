@@ -42,6 +42,8 @@ module.exports = class UserController {
       }
       // payload (user ID) -> token
       const token = await Helper.sign(obj.id);
+      // send mail
+      Utils.sendMail();
       // res
       res.status(200).json({
         message: "User successfully logged in.",

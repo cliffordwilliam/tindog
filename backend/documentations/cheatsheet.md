@@ -720,3 +720,7 @@ npx sequelize db:migrate:undo:all ^
 & npx sequelize db:seed:all ^
 nodemon .\bin\www.js
 ```
+
+# sending mail (Google OAuth)
+
+https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/
