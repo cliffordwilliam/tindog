@@ -60,7 +60,9 @@ export function request({
       });
       document.querySelector("dialog").close(); // in case it was opened
       dispatch(ok(res.data));
-      callback(res.data);
+      if (callback) {
+        callback(res.data);
+      }
       if (isEnd) {
         document.querySelector("dialog").showModal();
       }

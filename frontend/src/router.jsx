@@ -13,6 +13,8 @@ import VerifyEmail from "./pages/VerifyEmail.jsx";
 import ConfirmEmail from "./pages/ConfirmEmail.jsx";
 import Terms from "./pages/Terms.jsx";
 import Guidelines from "./pages/Guidelines.jsx";
+import ForgotPassword from "./pages/ForgetPassword.jsx";
+import ResetPassword from "./pages/ResetPasswordForm.jsx";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,14 @@ const router = createBrowserRouter([
           {
             path: "/guidelines",
             element: <Guidelines />,
+          },
+          {
+            path: "/forget-password",
+            element: <ForgotPassword />,
+          },
+          {
+            path: "/reset-password/:token",
+            element: <ResetPassword />,
           },
         ],
       },

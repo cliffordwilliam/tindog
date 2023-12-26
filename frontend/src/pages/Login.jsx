@@ -81,9 +81,12 @@ export default function Register() {
           name="password"
           required
         />
-        <button className="mt align-self-end" type="submit">
-          Sign in
-        </button>
+        <div className="h-flex mt align-center">
+          <imports.Link className="mra" to={"/forget-password"}>
+            Forget Password
+          </imports.Link>
+          <button type="submit">Sign in</button>
+        </div>
       </form>
     </main>
   );
