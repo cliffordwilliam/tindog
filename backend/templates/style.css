@@ -1,0 +1,25 @@
+.title {
+  margin: 2.5rem 0;
+}
+.card {
+  max-width: 500px;
+  margin: auto;
+  background-color: #fff;
+  padding: 2.5rem 3rem;
+  text-align: center;
+}
+.content {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #737f8d;
+}
+.btn {
+  border-radius: 0.25rem;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  background-color: #f27677;
+  width: 100px;
+  color: white;
+  font-size: 1rem;
+  line-height: 3rem;
+}

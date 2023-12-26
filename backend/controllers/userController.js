@@ -47,7 +47,7 @@ module.exports = class UserController {
       // payload (user ID) -> token
       const token = await Helper.sign(obj.id);
       // email btn link
-      const frontendLink = `${process.env.FRONTEND_BASE_URL}/confirm-email?token=${token}`;
+      const frontendLink = `${process.env.FRONTEND_BASE_URL}/confirm-email/${token}`;
       // get html
       const htmlPath = path.join(
         __dirname,
