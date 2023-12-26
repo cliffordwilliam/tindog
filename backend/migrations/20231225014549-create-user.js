@@ -14,6 +14,14 @@ module.exports = {
         allowNull: false, // required
         unique: true, // unique
       },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false, // required
+        unique: true, // unique
+        validate: {
+          isEmail: true, // isEmail
+        },
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false, // required
@@ -23,6 +31,11 @@ module.exports = {
         validate: {
           isUrl: true, // isUrl
         },
+      },
+      is_verified: {
+        type: Sequelize.STRING,
+        allowNull: false, // required
+        defaultValue: false, // default value
       },
       createdAt: {
         allowNull: false,

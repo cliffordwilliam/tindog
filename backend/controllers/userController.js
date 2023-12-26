@@ -1,16 +1,20 @@
 const Helper = require("../helper.js");
 const { User } = require("../models/index.js");
 const Utils = require("../utils.js");
+const fs = require("fs").promises;
+const path = require("path");
 
 module.exports = class UserController {
   static async post(req, res, next) {
     try {
       // get body
-      const { name, password } = req.body;
+      const { name, email, password } = req.body;
       // POST
       const obj = await User.create({
         name,
+        email,
         password,
+        is_verified: false,
       });
       // res
       res.status(201).json({
@@ -21,18 +25,18 @@ module.exports = class UserController {
       next(error);
     }
   }
-  static async login(req, res, next) {
+  static async loginEmail(req, res, next) {
     try {
       // get body
-      let { name, password } = req.body;
+      let { email, password } = req.body;
       // null? ""
-      name = name ?? "";
+      email = email ?? "";
       password = password ?? "";
       // no user? throw
-      const obj = await User.findOne({ where: { name } });
+      const obj = await User.findOne({ where: { email } });
       if (!obj) {
         Helper.error(
-          "User not found. Please check your name or register.",
+          "User not found. Please check your email or register.",
           401
         );
       }
@@ -42,13 +46,60 @@ module.exports = class UserController {
       }
       // payload (user ID) -> token
       const token = await Helper.sign(obj.id);
+      // email btn link
+      const frontendLink = `${process.env.FRONTEND_BASE_URL}/confirm-email?token=${token}`;
+      // get html
+      const htmlPath = path.join(
+        __dirname,
+        "../templates",
+        "email-template.html"
+      );
+      let htmlContent = await fs.readFile(htmlPath, "utf8");
+      // update html btn link
+      htmlContent = htmlContent.replace("{{frontendLink}}", frontendLink);
       // send mail
-      Utils.sendMail();
+      await Utils.transporter.sendMail({
+        from: "ccliffordwilliam@gmail.com",
+        to: obj.email,
+        subject: "[Tindog] Email Verification",
+        html: `
+        ${htmlContent}
+      `,
+      });
+      // res
+      res.status(200).json({
+        message: "Email verification successfully sent.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async login(req, res, next) {
+    try {
+      // get body
+      let { email, password } = req.body;
+      // null? ""
+      email = email ?? "";
+      password = password ?? "";
+      // no user? throw
+      const obj = await User.findOne({ where: { email } });
+      if (!obj) {
+        Helper.error(
+          "User not found. Please check your email or register.",
+          401
+        );
+      }
+      // wrong password? throw
+      if (!(await Helper.compare(password, obj.password))) {
+        Helper.error("Wrong password. Please try again.", 401);
+      }
+      // payload (user ID) -> token
+      const token = await Helper.sign(obj.id);
       // res
       res.status(200).json({
         message: "User successfully logged in.",
-        token,
         obj,
+        token,
       });
     } catch (error) {
       next(error);
@@ -65,8 +116,17 @@ module.exports = class UserController {
         sortBy,
         search,
         searchBy,
-        ["id", "name", "password", "image_url", "createdAt", "updatedAt"], // validSortFields (all cols)
-        ["name", "password"] // validSearchFields (strings only)
+        [
+          "id",
+          "name",
+          "email",
+          "password",
+          "image_url",
+          "is_verified",
+          "createdAt",
+          "updatedAt",
+        ], // validSortFields (all cols)
+        ["name", "email", "password", "image_url"] // validSearchFields (strings only)
       );
       // GET
       const total = await User.count();
@@ -103,11 +163,12 @@ module.exports = class UserController {
       // get loggedIn
       const { id } = req.loggedInUser.dataValues;
       // get body
-      let { name, password } = req.body;
+      let { name, password, is_verified } = req.body;
       // not nulls -> updateFields
       const updateFields = {};
       if (name) updateFields.name = name;
       if (password) updateFields.password = await Helper.hash(password);
+      if (is_verified) updateFields.is_verified = is_verified;
       // PUT
       const [_, [obj]] = await User.update(updateFields, {
         where: { id },

@@ -59,6 +59,7 @@ app.use(express.urlencoded({ extended: true })); // req.body
 app.use(express.json()); // for reading jest req
 app.use(homeRouter); // enter home router
 app.use(Middleware.error); // dump all err here
+app.use(express.static("public")); // use public folder
 
 // export
 module.exports = { app, server };

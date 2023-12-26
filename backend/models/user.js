@@ -18,6 +18,16 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: "Name cannot be empty." }, // required
         },
       },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false, // required
+        unique: { msg: "Email is already in use." }, // unique
+        validate: {
+          isEmail: { msg: "Invalid email format." }, //isEmail
+          notNull: { msg: "Email is required." }, // required
+          notEmpty: { msg: "Email cannot be empty." }, // required
+        },
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false, // required
@@ -30,6 +40,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           isUrl: { msg: "Invalid URL format." }, // isUrl
+        },
+      },
+      is_verified: {
+        type: DataTypes.STRING,
+        allowNull: false, // required
+        defaultValue: false, // default value
+        validate: {
+          notNull: { msg: "Is verified is required." }, // required
+          notEmpty: { msg: "Is verified cannot be empty." }, // required
         },
       },
     },
