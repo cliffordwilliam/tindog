@@ -5,11 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { request } from "./store/apiSlice.js";
 import { useParams } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import io from "socket.io-client";
 import c from "./c.js";
-import PrivateHeader from "./components/PrivateHeader.jsx";
-import PublicHeader from "./components/PublicHeader.jsx";
-import Footer from "./components/Footer.jsx";
 
 const imports = {
   React,
@@ -24,9 +22,7 @@ const imports = {
   useNavigate,
   io,
   c,
-  PrivateHeader,
-  PublicHeader,
-  Footer,
+  GoogleLogin,
 };
 
 export default imports;

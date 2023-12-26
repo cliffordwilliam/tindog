@@ -9,8 +9,12 @@ import Global from "./layouts/Global.jsx";
 import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
+import ConfirmEmail from "./pages/ConfirmEmail.jsx";
+import Terms from "./pages/Terms.jsx";
+import Guidelines from "./pages/Guidelines.jsx";
 
-const Router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     element: <Global />,
     children: [
@@ -40,6 +44,22 @@ const Router = createBrowserRouter([
             path: "/login",
             element: <Login />,
           },
+          {
+            path: "/verify-email/:email",
+            element: <VerifyEmail />,
+          },
+          {
+            path: "/confirm-email/:token",
+            element: <ConfirmEmail />,
+          },
+          {
+            path: "/terms",
+            element: <Terms />,
+          },
+          {
+            path: "/guidelines",
+            element: <Guidelines />,
+          },
         ],
       },
     ],
@@ -47,4 +67,4 @@ const Router = createBrowserRouter([
 ]);
 
 // export
-export default Router;
+export default router;

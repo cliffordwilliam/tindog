@@ -2,11 +2,10 @@ import imports from "../imports.js";
 const { React } = imports;
 import components from "../components.js";
 
-export default function Global() {
+export default function Guidelines() {
   return (
-    <>
-      <components.Dialog />
-      <imports.Outlet />
-    </>
+    <main>
+      <h2>Guidelines</h2>
+    </main>
   );
 }

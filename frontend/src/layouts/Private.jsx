@@ -1,11 +1,13 @@
 import imports from "../imports.js";
+const { React } = imports;
+import components from "../components.js";
 
 export default function Private() {
   return (
     <>
-      <imports.PrivateHeader />
+      <components.PrivateHeader />
       <imports.Outlet />
-      <imports.Footer />
+      <components.Footer />
     </>
   );
 }

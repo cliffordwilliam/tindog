@@ -1,11 +1,13 @@
 import imports from "../imports.js";
+const { React } = imports;
+import components from "../components.js";
 
 export default function Public() {
   return (
     <>
-      <imports.PublicHeader />
+      <components.PublicHeader />
       <imports.Outlet />
-      <imports.Footer />
+      <components.Footer />
     </>
   );
 }

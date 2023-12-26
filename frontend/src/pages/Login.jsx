@@ -1,12 +1,16 @@
 import imports from "../imports.js";
+const { React } = imports;
+import components from "../components.js";
 
 export default function Register() {
+  const navigate = imports.useNavigate();
   const dispatch = imports.useDispatch();
-  const [name, setName] = imports.useState("");
+  const [email, setEmail] = imports.useState("");
   const [password, setPassword] = imports.useState("");
 
-  function onLoginDone(data) {
-    console.log(data);
+  function saveTokenKickHome(data) {
+    localStorage.setItem("token", data.token);
+    navigate("/");
   }
 
   const onLoginSubmit = (e) => {
@@ -17,41 +21,69 @@ export default function Register() {
         url: `${imports.c.baseUrl}/user/login`,
         options: {
           data: {
-            name,
+            email,
             password,
           },
         },
-        callback: onLoginDone,
+        callback: saveTokenKickHome,
       })
     );
   };
 
+  async function postGoogleLogin(codeResponse) {
+    dispatch(
+      imports.request({
+        method: "POST",
+        url: `${imports.c.baseUrl}/user/google-login`,
+        options: {
+          headers: {
+            token: codeResponse.credential,
+          },
+        },
+        callback: saveTokenKickHome,
+      })
+    );
+  }
+
   return (
-    <main>
-      <form onSubmit={onLoginSubmit}>
-        <label htmlFor="name">
-          Name:
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            name="name"
-            required
-          />
-        </label>
-        <label htmlFor="password">
-          Password:
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            name="password"
-            required
-          />
-        </label>
-        <button type="submit">Login</button>
+    <main className="p cc">
+      <form className="sw br p2 shadow" onSubmit={onLoginSubmit}>
+        <h3 className="mb">Sign in</h3>
+        <div className="cc">
+          <imports.GoogleLogin onSuccess={postGoogleLogin} />
+        </div>
+        <div className="h-flex align-center">
+          <hr />
+          <span className="p">or</span>
+          <hr />
+        </div>
+        <p className="mb">
+          Don't have an account?
+          <imports.Link to={"/register"}>Please sign up.</imports.Link>
+        </p>
+        <label htmlFor="email">Email *</label>
+        <input
+          className="mb mt"
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          required
+        />
+        <label htmlFor="password">Password *</label>
+        <input
+          className="mb mt"
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          required
+        />
+        <button className="mt align-self-end" type="submit">
+          Sign in
+        </button>
       </form>
     </main>
   );
