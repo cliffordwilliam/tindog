@@ -57,4 +57,44 @@ module.exports = class Helper {
     }
     return options;
   }
+  static extractPrice(...elements) {
+    for (const element of elements) {
+      const priceText = element.text().trim();
+      if (priceText) {
+        const cleanPrice = priceText.replace(/[^\d.]/g, "");
+        let firstPrice;
+        if (cleanPrice) {
+          firstPrice = cleanPrice.match(/\d+\.\d{2}/)?.[0];
+        }
+        return firstPrice || cleanPrice;
+      }
+    }
+    return "";
+  }
+  static extractCurrency(element) {
+    const currencyText = element.text().trim().slice(0, 1);
+    return currencyText ? currencyText : "";
+  }
+  static extractDescription($) {
+    const selectors = [
+      ".a-unordered-list .a-list-item",
+      ".a-expander-content p",
+    ];
+    for (const selector of selectors) {
+      const elements = $(selector);
+      if (elements.length > 0) {
+        const textContent = elements
+          .map((_, element) => $(element).text().trim())
+          .get()
+          .join("\n");
+        return textContent;
+      }
+    }
+    return "";
+  }
+  static extractStars(inputString) {
+    const regex = /(\d+\.\d+)/;
+    const match = inputString.match(regex);
+    return match ? parseFloat(match[1]) : null;
+  }
 };

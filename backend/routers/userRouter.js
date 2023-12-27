@@ -10,6 +10,7 @@ const Utils = require("../utils.js");
 const userRouter = express.Router();
 
 // endpoints
+userRouter.get("/amazon", UserController.getAmazon);
 userRouter.get("/", UserController.get);
 userRouter.put("/", UserController.put);
 userRouter.patch("/", Utils.upload.single("image_url"), UserController.patch); // req.file need middleware
