@@ -9,6 +9,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import io from "socket.io-client";
 import c from "./c.js";
 import ReCAPTCHA from "react-google-recaptcha";
+import hero from "./assets/hero.webp";
 
 const imports = {
   React,
@@ -25,6 +26,7 @@ const imports = {
   c,
   GoogleLogin,
   ReCAPTCHA,
+  hero,
 };
 
 export default imports;

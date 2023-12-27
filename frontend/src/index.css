@@ -43,7 +43,6 @@ h1 {
 p,
 label {
   line-height: 1.75;
-  color: #0009;
   font-size: 0.875rem;
 }
 form {
@@ -103,6 +102,16 @@ hr {
   border: none;
   border-top: 2px solid #0001;
 }
+a {
+  text-decoration: none;
+  color: #f77;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+img {
+  display: block;
+  object-fit: cover;
+}
 .p {
   padding: 1rem;
 }
@@ -156,7 +165,7 @@ hr {
 }
 .bad-bg {
   background-color: #f55;
-  color: #fff;
+  color: #fff !important;
 }
 .loading-bg {
   background-color: transparent;
@@ -179,9 +188,30 @@ hr {
     transform: rotate(360deg);
   }
 }
-a {
-  text-decoration: none;
-  color: #f77;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+.rel {
+  position: relative;
+}
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: brightness(0.8);
+}
+.tw {
+  color: #fff;
+}
+.ts {
+  text-shadow: 0 0 0.5rem #000;
+}
+.hero {
+  height: 500px;
+}
+.hero-title {
+  font-size: max(2rem, 6vmin);
+}
+.tr {
+  color: #f55;
 }
