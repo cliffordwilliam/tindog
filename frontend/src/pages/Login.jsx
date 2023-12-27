@@ -35,23 +35,6 @@ export default function Register() {
     navigate("/");
   }
 
-  const onCaptchaSubmit = (e) => {
-    e.preventDefault();
-    dispatch(
-      imports.request({
-        method: "POST",
-        url: `${imports.c.baseUrl}/user/login`,
-        options: {
-          data: {
-            email,
-            password,
-          },
-        },
-        callback: saveTokenKickHome,
-      })
-    );
-  };
-
   const onLoginSubmit = (e) => {
     e.preventDefault();
     dispatch(
