@@ -42,15 +42,6 @@ module.exports = (sequelize, DataTypes) => {
           isUrl: { msg: "Invalid URL format." }, // isUrl
         },
       },
-      is_verified: {
-        type: DataTypes.STRING,
-        allowNull: false, // required
-        defaultValue: false, // default value
-        validate: {
-          notNull: { msg: "Is verified is required." }, // required
-          notEmpty: { msg: "Is verified cannot be empty." }, // required
-        },
-      },
     },
     {
       sequelize,

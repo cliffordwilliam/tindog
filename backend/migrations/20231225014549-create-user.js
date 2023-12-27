@@ -32,11 +32,6 @@ module.exports = {
           isUrl: true, // isUrl
         },
       },
-      is_verified: {
-        type: Sequelize.STRING,
-        allowNull: false, // required
-        defaultValue: false, // default value
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

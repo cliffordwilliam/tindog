@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import io from "socket.io-client";
 import c from "./c.js";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const imports = {
   React,
@@ -23,6 +24,7 @@ const imports = {
   io,
   c,
   GoogleLogin,
+  ReCAPTCHA,
 };
 
 export default imports;

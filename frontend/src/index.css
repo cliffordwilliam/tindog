@@ -40,8 +40,11 @@ h2 {
 h1 {
   font-size: 2rem;
 }
-p {
+p,
+label {
   line-height: 1.75;
+  color: #0009;
+  font-size: 0.875rem;
 }
 form {
   display: flex;
@@ -74,6 +77,11 @@ button,
   padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 4px;
+}
+button:disabled {
+  background-color: #0001;
+  border-color: #0001;
+  color: #0004;
 }
 html,
 body,

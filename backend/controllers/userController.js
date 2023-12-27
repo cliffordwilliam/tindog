@@ -3,6 +3,8 @@ const { User } = require("../models/index.js");
 const Utils = require("../utils.js");
 const fs = require("fs").promises;
 const path = require("path");
+const { OAuth2Client } = require("google-auth-library");
+const axios = require("axios");
 
 module.exports = class UserController {
   static async post(req, res, next) {
@@ -14,12 +16,72 @@ module.exports = class UserController {
         name,
         email,
         password,
-        is_verified: false,
       });
       // res
       res.status(201).json({
         message: "User successfully created.",
         obj,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async captcha(req, res, next) {
+    try {
+      // get body
+      const { captchaValue } = req.body;
+      // POST
+      const { data } = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${captchaValue}`
+      );
+      // res
+      res.status(200).json({
+        message: "Captcha successfully verified.",
+        obj: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async forgotEmail(req, res, next) {
+    try {
+      // get body
+      let { email } = req.body;
+      // null? ""
+      email = email ?? "";
+      // no user? throw
+      const obj = await User.findOne({ where: { email } });
+      if (!obj) {
+        Helper.error(
+          "User not found. Please check your email or register.",
+          401
+        );
+      }
+      // payload (user ID) -> token
+      const token = await Helper.sign(obj.id);
+      // email btn link
+      const frontendLink = `${process.env.FRONTEND_BASE_URL}/reset-password/${token}`;
+      // get html
+      const htmlPath = path.join(
+        __dirname,
+        "../templates",
+        "forgot-email-template.html"
+      );
+      let htmlContent = await fs.readFile(htmlPath, "utf8");
+      // update html btn link
+      htmlContent = htmlContent.replace("{{frontendLink}}", frontendLink);
+      // send mail
+      await Utils.transporter.sendMail({
+        from: "ccliffordwilliam@gmail.com",
+        to: obj.email,
+        subject: "[Tindog] Reset Password",
+        html: `
+        ${htmlContent}
+      `,
+      });
+      // res
+      res.status(200).json({
+        message: "Reset password email successfully sent.",
       });
     } catch (error) {
       next(error);
@@ -122,7 +184,6 @@ module.exports = class UserController {
           "email",
           "password",
           "image_url",
-          "is_verified",
           "createdAt",
           "updatedAt",
         ], // validSortFields (all cols)
@@ -163,12 +224,11 @@ module.exports = class UserController {
       // get loggedIn
       const { id } = req.loggedInUser.dataValues;
       // get body
-      let { name, password, is_verified } = req.body;
+      let { name, password } = req.body;
       // not nulls -> updateFields
       const updateFields = {};
       if (name) updateFields.name = name;
       if (password) updateFields.password = await Helper.hash(password);
-      if (is_verified) updateFields.is_verified = is_verified;
       // PUT
       const [_, [obj]] = await User.update(updateFields, {
         where: { id },
@@ -223,6 +283,37 @@ module.exports = class UserController {
       // res
       res.status(200).json({
         message: "User successfully deleted.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async googleLogin(req, res, next) {
+    try {
+      const { token } = req.headers;
+      const client = new OAuth2Client();
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.OAUTH_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      const [user, created] = await User.findOrCreate({
+        where: {
+          name: payload.name,
+        },
+        defaults: {
+          name: payload.name,
+          email: payload.email,
+          password: "password_google",
+        },
+        hooks: false,
+      });
+      const access_token = Helper.sign({
+        id: user.id,
+      });
+      res.status(200).json({
+        msg: `User successfully logged in.`,
+        token: access_token,
       });
     } catch (error) {
       next(error);

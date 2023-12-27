@@ -7,11 +7,50 @@ export default function Register() {
   const dispatch = imports.useDispatch();
   const [email, setEmail] = imports.useState("");
   const [password, setPassword] = imports.useState("");
+  const [captchaResult, setCaptchaResult] = imports.useState("");
+
+  function updateCaptchaResult(data) {
+    setCaptchaResult(data.obj.success);
+  }
+
+  function onCaptchaChange(value) {
+    // TODO: this is development only! move to production later
+    dispatch(
+      imports.request({
+        method: "POST",
+        url: `${imports.c.baseUrl}/user/captcha`,
+        options: {
+          data: {
+            value,
+          },
+        },
+        isStart: true,
+        callback: updateCaptchaResult,
+      })
+    );
+  }
 
   function saveTokenKickHome(data) {
     localStorage.setItem("token", data.token);
     navigate("/");
   }
+
+  const onCaptchaSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      imports.request({
+        method: "POST",
+        url: `${imports.c.baseUrl}/user/login`,
+        options: {
+          data: {
+            email,
+            password,
+          },
+        },
+        callback: saveTokenKickHome,
+      })
+    );
+  };
 
   const onLoginSubmit = (e) => {
     e.preventDefault();
@@ -81,11 +120,17 @@ export default function Register() {
           name="password"
           required
         />
+        <imports.ReCAPTCHA
+          sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+          onChange={onCaptchaChange}
+        />
         <div className="h-flex mt align-center">
           <imports.Link className="mra" to={"/forget-password"}>
             Forget Password
           </imports.Link>
-          <button type="submit">Sign in</button>
+          <button type="submit" disabled={!captchaResult}>
+            Sign in
+          </button>
         </div>
       </form>
     </main>

@@ -10,6 +10,28 @@ export default function Register() {
   const [password, setPassword] = imports.useState("");
   const [confirmPassword, setConfirmPassword] = imports.useState("");
   const [agreeTerms, setAgreeTerms] = imports.useState(false);
+  const [captchaResult, setCaptchaResult] = imports.useState("");
+
+  function updateCaptchaResult(data) {
+    setCaptchaResult(data.obj.success);
+  }
+
+  function onCaptchaChange(value) {
+    // TODO: this is development only! move to production later
+    dispatch(
+      imports.request({
+        method: "POST",
+        url: `${imports.c.baseUrl}/user/captcha`,
+        options: {
+          data: {
+            value,
+          },
+        },
+        isStart: true,
+        callback: updateCaptchaResult,
+      })
+    );
+  }
 
   function saveTokenKickHome(data) {
     localStorage.setItem("token", data.token);
@@ -144,6 +166,10 @@ export default function Register() {
             Privacy policy.
           </imports.Link>
         </label>
+        <imports.ReCAPTCHA
+          sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+          onChange={onCaptchaChange}
+        />
         <p className="mb">
           Clicking the "Sign Up" button implies the agreement on the followings:
         </p>
@@ -154,7 +180,11 @@ export default function Register() {
             and agree with it.
           </li>
         </ul>
-        <button className="mt align-self-end" type="submit">
+        <button
+          className="mt align-self-end"
+          type="submit"
+          disabled={!captchaResult}
+        >
           Sign Up
         </button>
       </form>
